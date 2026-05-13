@@ -9,3 +9,20 @@ if uploaded_file:
 
     st.subheader("Log Content")
     st.text(content)
+
+    st.subheader("Detected Issues")
+
+    lines = content.splitlines()
+
+    for line in lines:
+        if "ERROR" in line:
+            st.error(line)
+
+        elif "WARN" in line:
+            st.warning(line)
+
+        elif "FAILED" in line:
+            st.error(line)
+
+        elif "Exception" in line:
+            st.exception(line)
