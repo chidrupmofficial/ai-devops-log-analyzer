@@ -10,19 +10,38 @@ if uploaded_file:
     st.subheader("Log Content")
     st.text(content)
 
-    st.subheader("Detected Issues")
-
     lines = content.splitlines()
 
+    error_count = 0
+    warn_count = 0
+    failed_count = 0
+    exception_count = 0
+
+    st.subheader("Detected Issues")
+
     for line in lines:
+
         if "ERROR" in line:
+            error_count += 1
             st.error(line)
 
         elif "WARN" in line:
+            warn_count += 1
             st.warning(line)
 
         elif "FAILED" in line:
+            failed_count += 1
             st.error(line)
 
         elif "Exception" in line:
+            exception_count += 1
             st.exception(line)
+
+    st.subheader("Issue Summary")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Errors", error_count)
+    col2.metric("Warnings", warn_count)
+    col3.metric("Failures", failed_count)
+    col4.metric("Exceptions", exception_count)
