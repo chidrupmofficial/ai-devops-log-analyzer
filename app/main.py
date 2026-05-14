@@ -1,10 +1,12 @@
 import streamlit as st
+import pandas as pd
 
 st.title("AI DevOps Log Analyzer")
 
 uploaded_file = st.file_uploader("Upload a log file")
 
 if uploaded_file:
+
     content = uploaded_file.read().decode("utf-8", errors="ignore")
 
     st.subheader("Log Content")
@@ -45,3 +47,33 @@ if uploaded_file:
     col2.metric("Warnings", warn_count)
     col3.metric("Failures", failed_count)
     col4.metric("Exceptions", exception_count)
+
+    st.subheader("AI Root Cause Analysis")
+
+    if error_count > 0:
+
+        if "Kubernetes" in content:
+            st.info("Possible Cause: Kubernetes pod crash detected.")
+
+        if "Docker" in content:
+            st.info("Possible Cause: Docker container failure detected.")
+
+        if "memory" in content.lower():
+            st.info("Possible Cause: High memory usage may have caused failure.")
+
+        if "disk" in content.lower():
+            st.info("Possible Cause: Disk space issue detected.")
+
+        if "Jenkins" in content:
+            st.info("Possible Cause: CI/CD pipeline execution failed.")
+            
+    st.subheader("Issue Severity Dashboard")
+
+    chart_data = pd.DataFrame(
+        {
+            "Issue Type": ["Errors", "Warnings", "Failures", "Exceptions"],
+            "Count": [error_count, warn_count, failed_count, exception_count],
+        }
+    )
+
+    st.bar_chart(chart_data.set_index("Issue Type"))        
