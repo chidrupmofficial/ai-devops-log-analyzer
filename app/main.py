@@ -1,11 +1,21 @@
 import streamlit as st
 import pandas as pd
 
+# Sidebar
+st.sidebar.title("DevOps AI Assistant")
+st.sidebar.info("Upload logs to analyze production issues.")
+
+# Main Title
 st.title("AI DevOps Log Analyzer")
 
+# Upload File
 uploaded_file = st.file_uploader("Upload a log file")
 
 if uploaded_file:
+
+    st.success("Log file uploaded successfully.")
+
+    st.write("Filename:", uploaded_file.name)
 
     content = uploaded_file.read().decode("utf-8", errors="ignore")
 
@@ -37,7 +47,7 @@ if uploaded_file:
 
         elif "Exception" in line:
             exception_count += 1
-            st.exception(line)
+            st.error(line)
 
     st.subheader("Issue Summary")
 
@@ -66,7 +76,7 @@ if uploaded_file:
 
         if "Jenkins" in content:
             st.info("Possible Cause: CI/CD pipeline execution failed.")
-            
+
     st.subheader("Issue Severity Dashboard")
 
     chart_data = pd.DataFrame(
@@ -76,4 +86,4 @@ if uploaded_file:
         }
     )
 
-    st.bar_chart(chart_data.set_index("Issue Type"))        
+    st.bar_chart(chart_data.set_index("Issue Type"))
